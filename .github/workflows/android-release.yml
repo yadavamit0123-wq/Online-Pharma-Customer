@@ -37,13 +37,30 @@ jobs:
       - name: Decode and convert release keystore
         working-directory: android
         env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          # Strip whitespace/newlines from base64 secret (macOS base64 wraps lines)
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '[:space:]' | base64 -d > app/release-input.keystore
-          test -s app/release-input.keystore || (echo "Keystore decode failed — re-create KEYSTORE_BASE64 secret" && exit 1)
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 secret is missing or empty."
+            echo "Run: ./scripts/encode-keystore.sh \"/path/to/prt (2).jks\""
+            exit 1
+          fi
+
+          mkdir -p app
+          printf '%s' "$KEYSTORE_BASE64" | tr -d '[:space:]' | base64 --decode --ignore-garbage > app/release-input.keystore || {
+            echo "::error::Base64 decode failed. Re-create ANDROID_KEYSTORE_BASE64 (single line, no quotes)."
+            exit 1
+          }
+
+          SIZE=$(wc -c < app/release-input.keystore | tr -d ' ')
+          if [ "$SIZE" -lt 100 ]; then
+            echo "::error::Decoded keystore too small (${SIZE} bytes). Expected ~2709 bytes."
+            echo "Secret may be truncated or wrong. Run scripts/encode-keystore.sh locally."
+            exit 1
+          fi
+          echo "Decoded keystore: ${SIZE} bytes"
 
           # PKCS12 keystores (often saved as .jks) cause "Tag number over 30 is not supported"
           # in Android Gradle signing — convert to legacy JKS format.
@@ -63,9 +80,9 @@ jobs:
         run: |
           cat > keystore.properties <<EOF
           storeFile=app/release.keystore
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
           EOF
 
       - name: Print signing fingerprints (for assetlinks.json + Firebase)
@@ -74,14 +91,14 @@ jobs:
           echo "## Signing fingerprints" >> $GITHUB_STEP_SUMMARY
           keytool -list -v \
             -keystore app/release.keystore \
-            -alias "${{ secrets.KEY_ALIAS }}" \
-            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
+            -alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
+            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
             | grep -E "SHA1|SHA256" | tee -a $GITHUB_STEP_SUMMARY
 
       - name: Verify keystore exists
         working-directory: android
         run: |
-          test -f app/release.keystore || (echo "Keystore missing — check KEYSTORE_BASE64 secret" && exit 1)
+          test -f app/release.keystore || (echo "Keystore missing — check ANDROID_KEYSTORE_BASE64 secret" && exit 1)
           test -f keystore.properties || (echo "keystore.properties missing" && exit 1)
 
       - name: Build release APK and AAB

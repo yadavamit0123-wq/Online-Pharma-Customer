@@ -14,11 +14,21 @@ Customer app = **PWA website** wrapped as **TWA** (Trusted Web Activity) for Pla
 
 ## 1. GitHub Secrets (repo → Settings → Secrets → Actions)
 
-Run on Mac **once** to get keystore base64 (single line, no line breaks):
+Run on Mac **once** to encode keystore and copy to clipboard:
+
+```bash
+cd Online-Pharma-Customer
+chmod +x scripts/encode-keystore.sh
+./scripts/encode-keystore.sh "/Users/amityadav/Downloads/prt (2).jks"
+```
+
+Or manually:
 
 ```bash
 base64 -i "/Users/amityadav/Downloads/prt (2).jks" | tr -d '\n' | pbcopy
 ```
+
+**Expected:** file ~2709 bytes → base64 ~3612 characters (single line).
 
 > **Note:** Many `.jks` files from Android Studio are actually **PKCS12** format. GitHub Actions converts them to JKS automatically before build. If local `./gradlew assembleRelease` fails with `Tag number over 30 is not supported`, convert once:
 >
@@ -33,10 +43,10 @@ Add these **4 secrets**:
 
 | Secret name | Value |
 |-------------|-------|
-| `KEYSTORE_BASE64` | Paste base64 output (entire string) |
-| `KEYSTORE_PASSWORD` | Keystore password |
-| `KEY_ALIAS` | `key0` |
-| `KEY_PASSWORD` | Key password |
+| `ANDROID_KEYSTORE_BASE64` | Paste base64 output (entire string) |
+| `ANDROID_KEYSTORE_PASSWORD` | Keystore password |
+| `ANDROID_KEY_ALIAS` | `key0` |
+| `ANDROID_KEY_PASSWORD` | Key password |
 
 **Never commit `.jks` or passwords to git.**
 
