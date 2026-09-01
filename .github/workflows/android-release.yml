@@ -31,6 +31,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Install Android SDK platform 35
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
       - name: Decode release keystore
         working-directory: android
         run: |
@@ -55,6 +58,12 @@ jobs:
             -alias "${{ secrets.KEY_ALIAS }}" \
             -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
             | grep -E "SHA1|SHA256" | tee -a $GITHUB_STEP_SUMMARY
+
+      - name: Verify keystore exists
+        working-directory: android
+        run: |
+          test -f app/release.keystore || (echo "Keystore missing — check KEYSTORE_BASE64 secret" && exit 1)
+          test -f keystore.properties || (echo "keystore.properties missing" && exit 1)
 
       - name: Build release APK and AAB
         working-directory: android
