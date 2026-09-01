@@ -1,8 +1,9 @@
 class AppConstant {
-  static String baseUrl = 'YOUR_APP_BASE_URL/api/';
-  static String appName = 'YOUR_APP_NAME';
-  static String packageName = 'YOUR_APP_PACKAGE_NAME';
-  static String androidMapKey = 'YOUR_ANDROID_MAP_KEY';
-  static String iosMapKey = 'YOUR_IOS_MAP_KEY';
-  static String serverClientId = 'YOUR_SERVER_CLIENT_ID';
+  static String baseUrl = 'https://admin.onlinepharma.co.in/api/';
+  static String appName = 'Online Pharma';
+  static String packageName = 'com.pt.onlinepharma';
+  static String androidMapKey = 'AIzaSyA_usa-2matJnaEuxFvNag8qhXL51w4vJM';
+  static String iosMapKey = 'AIzaSyA_usa-2matJnaEuxFvNag8qhXL51w4vJM';
+  static String serverClientId =
+      '584383465211-adhevptldb0icne1dfic4o9n960hamon.apps.googleusercontent.com';
 }

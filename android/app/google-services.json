@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "584383465211",
+    "project_id": "online-pharma-a0170",
+    "storage_bucket": "online-pharma-a0170.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584383465211:android:50794dab5a5c9f9e0dd25e",
+        "android_client_info": {
+          "package_name": "com.pt.onlinepharma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584383465211-adhevptldb0icne1dfic4o9n960hamon.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_2NF_srV3tDX-Zokynvszjjmq8b7EPvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584383465211-adhevptldb0icne1dfic4o9n960hamon.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584383465211:android:7f11c0ef7ae702940dd25e",
+        "android_client_info": {
+          "package_name": "com.pt.onlinepharmarider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584383465211-adhevptldb0icne1dfic4o9n960hamon.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_2NF_srV3tDX-Zokynvszjjmq8b7EPvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584383465211-adhevptldb0icne1dfic4o9n960hamon.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584383465211:android:90925684eea7f5610dd25e",
+        "android_client_info": {
+          "package_name": "com.pt.onlinepharmaseller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584383465211-adhevptldb0icne1dfic4o9n960hamon.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_2NF_srV3tDX-Zokynvszjjmq8b7EPvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584383465211-adhevptldb0icne1dfic4o9n960hamon.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

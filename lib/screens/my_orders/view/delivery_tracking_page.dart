@@ -1285,7 +1285,7 @@ class _DeliveryTrackingPageState extends State<DeliveryTrackingPage>
           urlTemplate: 'https://server.arcgisonline.com/ArcGIS/rest/services/'
               'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
           subdomains: const ['a', 'b', 'c'],
-          userAgentPackageName: 'com.hyperlocal.app',
+          userAgentPackageName: 'com.pt.onlinepharma',
         ),
         PolylineLayer(
           polylines: [

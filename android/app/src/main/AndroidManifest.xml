@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.hyperLocal.customer">
+    package="com.pt.onlinepharma">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
-        android:label="Hyperlocal - Multivendor App"
+        android:label="Online Pharma"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
@@ -41,7 +41,7 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="hyperlocal"/>
+                <data android:scheme="onlinepharma"/>
                 <data android:host="products" />
             </intent-filter>
 
@@ -64,7 +64,7 @@
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBoZ3ECVBbXNbgLaLGdw_3-dBQa8l1ZJns" />
+            android:value="AIzaSyA_usa-2matJnaEuxFvNag8qhXL51w4vJM" />
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
@@ -72,7 +72,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="com.hyperLocal.customer" />
+            android:value="com.pt.onlinepharma" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
