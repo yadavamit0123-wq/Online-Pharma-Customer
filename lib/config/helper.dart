@@ -363,11 +363,15 @@ bool isDarkMode(BuildContext context) {
   return Theme.of(context).brightness == Brightness.dark;
 }
 
-String getAppLogoUrl(BuildContext context) {
-  // bool isDark = Theme.of(context).brightness == Brightness.dark;
-  // const String lightLogoUrl = 'assets/images/app_logos/app-logo-light.png';
-  const String darkLogoUrl  = "assets/images/app_logos/app-logo-dark.png";
-  return darkLogoUrl;
+String getAppLogoUrl(BuildContext context, {bool forBrandBackground = false}) {
+  const String lightLogoUrl = 'assets/images/app_logos/app-logo-light.png';
+  const String darkLogoUrl = 'assets/images/app_logos/app-logo-dark.png';
+
+  if (forBrandBackground) {
+    return lightLogoUrl;
+  }
+
+  return isDarkMode(context) ? darkLogoUrl : lightLogoUrl;
 }
 
 String generateId(double lat, double lng, String? address) {

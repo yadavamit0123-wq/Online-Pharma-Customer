@@ -299,9 +299,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 children: [
                   Center(
                     child: CustomImageContainer(
-                      imagePath: getAppLogoUrl(context),
-                      height: 180,
-                      width: 250,
+                      imagePath: getAppLogoUrl(context, forBrandBackground: true),
+                      height: 120,
+                      width: 280,
                       fit: BoxFit.contain,
                     ),
                   )

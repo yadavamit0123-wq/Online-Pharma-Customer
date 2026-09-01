@@ -237,7 +237,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   alignment: Alignment.center,
                   child: CustomImageContainer(
                     imagePath: getAppLogoUrl(context),
-                    height: 120,
+                    height: 120.h,
+                    width: 280.w,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
