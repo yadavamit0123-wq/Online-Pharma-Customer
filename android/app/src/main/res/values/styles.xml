@@ -11,6 +11,6 @@
     </style>
 
     <style name="Theme.OnlinePharma.Launcher" parent="Theme.OnlinePharma">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowBackground">@color/splashBackground</item>
     </style>
 </resources>
