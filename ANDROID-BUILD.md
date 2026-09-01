@@ -14,11 +14,20 @@ Customer app = **PWA website** wrapped as **TWA** (Trusted Web Activity) for Pla
 
 ## 1. GitHub Secrets (repo → Settings → Secrets → Actions)
 
-Run on Mac **once** to get keystore base64:
+Run on Mac **once** to get keystore base64 (single line, no line breaks):
 
 ```bash
-base64 -i "/Users/amityadav/Downloads/prt (2).jks" | pbcopy
+base64 -i "/Users/amityadav/Downloads/prt (2).jks" | tr -d '\n' | pbcopy
 ```
+
+> **Note:** Many `.jks` files from Android Studio are actually **PKCS12** format. GitHub Actions converts them to JKS automatically before build. If local `./gradlew assembleRelease` fails with `Tag number over 30 is not supported`, convert once:
+>
+> ```bash
+> keytool -importkeystore -noprompt \
+>   -srckeystore "/Users/amityadav/Downloads/prt (2).jks" -srcstoretype PKCS12 \
+>   -destkeystore android/app/release.jks -deststoretype JKS \
+>   -alias key0
+> ```
 
 Add these **4 secrets**:
 

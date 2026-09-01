@@ -34,10 +34,29 @@ jobs:
       - name: Install Android SDK platform 36
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
-      - name: Decode release keystore
+      - name: Decode and convert release keystore
         working-directory: android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
+          # Strip whitespace/newlines from base64 secret (macOS base64 wraps lines)
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '[:space:]' | base64 -d > app/release-input.keystore
+          test -s app/release-input.keystore || (echo "Keystore decode failed — re-create KEYSTORE_BASE64 secret" && exit 1)
+
+          # PKCS12 keystores (often saved as .jks) cause "Tag number over 30 is not supported"
+          # in Android Gradle signing — convert to legacy JKS format.
+          keytool -importkeystore -noprompt \
+            -srckeystore app/release-input.keystore \
+            -srcstoretype PKCS12 \
+            -srcstorepass "$KEYSTORE_PASSWORD" \
+            -destkeystore app/release.keystore \
+            -deststoretype JKS \
+            -deststorepass "$KEYSTORE_PASSWORD" \
+            -destkeypass "$KEY_PASSWORD" \
+            -alias "$KEY_ALIAS"
+          rm -f app/release-input.keystore
 
       - name: Create keystore.properties
         working-directory: android
