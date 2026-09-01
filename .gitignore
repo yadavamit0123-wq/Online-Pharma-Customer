@@ -40,7 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# PWA files
+# Android signing (never commit)
+android/keystore.properties
+android/**/*.keystore
+android/**/*.jks
+
 **/public/manifest.json
 **/public/sw.js
 **/public/workbox-*.js
