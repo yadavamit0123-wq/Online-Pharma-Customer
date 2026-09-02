@@ -53,29 +53,27 @@ class CartValidation {
     required int thisProductStoreId,          // store ID of the product being added
   }) {
     final l10n = AppLocalizations.of(context)!;
-    final system = SettingsData.instance.system!;
+    final system = SettingsData.instance.system;
+    if (system == null) return null;
 
-    final newTotalItemsCount = currentCartItemCount + requestedAddQuantity;
-
-    // 1. Check maximum items allowed in cart (global limit)
-    if (newTotalItemsCount > system.maximumItemsAllowedInCart) {
-      final remaining = system.maximumItemsAllowedInCart - currentCartItemCount;
-      if (remaining <= 0) {
-        return l10n.youHaveReachedMaximumLimitOfTheCart;
+    final maxItems = system.maximumItemsAllowedInCart;
+    if (maxItems > 0) {
+      final newTotalItemsCount = currentCartItemCount + requestedAddQuantity;
+      if (newTotalItemsCount > maxItems) {
+        final remaining = maxItems - currentCartItemCount;
+        if (remaining <= 0) {
+          return l10n.youHaveReachedMaximumLimitOfTheCart;
+        }
+        return l10n.cannotAddMoreThanXItems(remaining);
       }
-      return l10n.cannotAddMoreThanXItems(remaining);
     }
 
-    if(currentStoreIdsInCart.isNotEmpty) {
-      if (system.checkoutType == 'single_store' && currentStoreIdsInCart.first != thisProductStoreId) {
+    if (currentStoreIdsInCart.isNotEmpty) {
+      if (system.checkoutType == 'single_store' &&
+          currentStoreIdsInCart.first != thisProductStoreId) {
         return l10n.onlyOneStoreAtATime;
       }
     }
-
-    // 2. Multi-store restriction — only if checkout type enforces single store
-
-
-    // All checks passed
     return null;
   }
 
@@ -88,16 +86,18 @@ class CartValidation {
     required Set<int> storeIds,
   }) {
     final l10n = AppLocalizations.of(context)!;
-    final system = SettingsData.instance.system!;
+    final system = SettingsData.instance.system;
+    if (system == null) return null;
 
     // Minimum cart amount
-    if (cartTotal < system.minimumCartAmount) {
+    if (system.minimumCartAmount > 0 && cartTotal < system.minimumCartAmount) {
       final minAmount = system.minimumCartAmount;
       return l10n.minimumCartAmountRequired(minAmount - cartTotal, minAmount);
     }
 
     // Maximum items in cart
-    if (totalItemsCount > system.maximumItemsAllowedInCart) {
+    if (system.maximumItemsAllowedInCart > 0 &&
+        totalItemsCount > system.maximumItemsAllowedInCart) {
       return l10n.youHaveReachedMaximumLimitOfTheCart;
     }
 

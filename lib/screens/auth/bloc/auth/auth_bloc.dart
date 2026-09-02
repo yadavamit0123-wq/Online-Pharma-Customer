@@ -318,8 +318,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     try {
       final credential = event.credential;
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      final auth = FirebaseAuth.instance;
+      final UserCredential userCredential;
+
+      if (!event.isLogin &&
+          auth.currentUser != null &&
+          auth.currentUser!.phoneNumber == null) {
+        userCredential = await auth.currentUser!.linkWithCredential(credential);
+      } else {
+        userCredential = await auth.signInWithCredential(credential);
+      }
+
       final token = await userCredential.user?.getIdToken(true);
 
       log('Phone Auth Success | Token: $token | Number: ${event.number}');
@@ -500,6 +509,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         )));
         emit(
             AuthSuccess(message: userData.first.message ?? 'Login successful'));
+      } else {
+        emit(AuthFailed(
+          error: response['message']?.toString() ?? 'Login failed',
+        ));
       }
     } catch (e) {
       emit(AuthFailed(error: e.toString()));
@@ -516,6 +529,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       log('Firebase token via google  $firebaseUserToken');
       if (firebaseUserToken.isEmpty) {
         emit(AuthInitial());
+        return;
       }
       add(SocialAuthRequest(firebaseToken: firebaseUserToken, isApple: false));
     } catch (e) {
@@ -533,6 +547,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       log('Firebase token via apple  $firebaseUserToken');
       if (firebaseUserToken.isEmpty) {
         emit(AuthInitial());
+        return;
       }
       add(SocialAuthRequest(firebaseToken: firebaseUserToken, isApple: true));
     } catch (e) {

@@ -7,9 +7,9 @@ import '../../../services/location/location_service.dart';
 class ShoppingListRepository {
   Future<Map<String, dynamic>> createShoppingList({required String keywords}) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
       final response = await AppHelpers.apiBaseHelper.getAPICall(
           '${ApiRoutes.shoppingListApi}?latitude=$latitude&longitude=$longitude&keywords=$keywords&per_page=40',
           {}

@@ -15,13 +15,9 @@ class NearByStoreRepo {
     required String searchQuery,
   }) async {
     try {
-      final locationService = LocationService.getStoredLocation();
-      if (locationService == null) {
-        return null;
-      }
-
-      final latitude = locationService.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       final Map<String, dynamic> query = {
         'latitude': latitude,
@@ -57,9 +53,9 @@ class NearByStoreRepo {
 
   Future<List<StoreDetailModel>> fetchStoreDetail({required String storeSlug}) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       final response = await AppHelpers.apiBaseHelper.getAPICall(
         '${ApiRoutes.storeDetailApi}$storeSlug?latitude=$latitude&longitude=$longitude',

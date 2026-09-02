@@ -30,6 +30,7 @@ class AppBarWidget extends StatefulWidget {
   final ProductInitialData? initialData;
   final ProductData? loadedProduct;
   final ProductVariants? selectedVariant;
+  final VoidCallback? onBack;
 
   const AppBarWidget({
     super.key,
@@ -37,6 +38,7 @@ class AppBarWidget extends StatefulWidget {
     this.initialData,
     this.loadedProduct,
     this.selectedVariant,
+    this.onBack,
   });
 
   @override
@@ -104,7 +106,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         padding: const EdgeInsets.all(8.0),
         child: AnimatedButton(
           onTap: () {
-            GoRouter.of(context).pop();
+            if (widget.onBack != null) {
+              widget.onBack!();
+              return;
+            }
+            if (context.canPop()) {
+              context.pop();
+            }
           },
           child: Container(
             padding: EdgeInsets.all(6),

@@ -13,8 +13,9 @@ class SearchRepository {
     required int currentPage
   }) async {
     try {
-      final latitude = LocationService.getStoredLocation()!.latitude;
-      final longitude = LocationService.getStoredLocation()!.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       final apiUrl = '${ApiRoutes.searchApi}?search=$query&per_page=$perPage&page=$currentPage&latitude=$latitude&longitude=$longitude&sort=${sortType ?? SortType.relevance}';
 

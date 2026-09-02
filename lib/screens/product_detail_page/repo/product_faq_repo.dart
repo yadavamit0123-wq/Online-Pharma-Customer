@@ -7,9 +7,9 @@ class ProductFAQRepository {
 
   Future<Map<String, dynamic>> fetchProductFAQ({required String productSlug}) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
       final response = await apiBaseHelper.getAPICall(
           '${ApiRoutes.productDetailApi}$productSlug/faqs?latitude=$latitude&longitude=$longitude', {}
       );

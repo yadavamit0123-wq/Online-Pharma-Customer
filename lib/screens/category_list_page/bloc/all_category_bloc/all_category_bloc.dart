@@ -29,6 +29,8 @@ class AllCategoriesBloc extends Bloc<AllCategoriesEvent, AllCategoriesState>{
       final response = await repository.fetchCategory(
         perPage: perPage,
         currentPage: currentPage,
+        homeOnly: false,
+        includeNoProduct: true,
       );
       categoryData = List<CategoryData>.from(response['data']['data'].map((data) => CategoryData.fromJson(data)));
       _hasReachedMax = categoryData.length < perPage;
@@ -73,6 +75,8 @@ class AllCategoriesBloc extends Bloc<AllCategoriesEvent, AllCategoriesState>{
         final response = await repository.fetchCategory(
           currentPage: currentPage,
           perPage: perPage,
+          homeOnly: false,
+          includeNoProduct: true,
         );
 
         final newCategoryData = List<CategoryData>.from(

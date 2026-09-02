@@ -60,9 +60,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage>
     with SingleTickerProviderStateMixin {
-  final ScrollController _scrollController = ScrollController();
   Map<String, SwatchValues> selectedVariants = {};
-  bool _showTitle = false;
 
   List<String> productSlugList = [];
 
@@ -101,7 +99,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     super.initState();
 
     productSlugList.add(widget.productSlug);
-    _scrollController.addListener(_onScroll);
   }
 
   void _onProductViewed(
@@ -115,25 +112,23 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     await RecentlyViewedService.addProduct(product);
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Attach once when the tree is built
-    PrimaryScrollController.of(context).addListener(_onScroll);
+  void _closePage() {
+    if (widget.closeContainer != null) {
+      widget.closeContainer!();
+      return;
+    }
+    if (context.canPop()) {
+      context.pop();
+    }
   }
 
-  void _onScroll() {
-    final offset = PrimaryScrollController.of(context).offset;
-    final show = offset > 200;
-    if (_showTitle != show) {
-      setState(() => _showTitle = show);
-    }
+  int _lowStockLimit() {
+    final raw = SettingsData.instance.system?.lowStockLimit;
+    return int.tryParse(raw?.toString() ?? '') ?? 0;
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -195,9 +190,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                       (BuildContext context, bool innerBoxIsScrolled) {
                     return [
                       AppBarWidget(
-                        showTitle: false,
+                        showTitle: innerBoxIsScrolled,
                         initialData: widget.initialData,
                         loadedProduct: null,
+                        onBack: _closePage,
                       )
                     ];
                   },
@@ -205,6 +201,14 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 );
               } else if (state is ProductDetailLoaded) {
                 final product = state.productData[0];
+
+                if (product.variants.isEmpty) {
+                  return NoProductPage(
+                    onRetry: () => context.read<ProductDetailBloc>().add(
+                      FetchProductDetail(productSlug: widget.productSlug),
+                    ),
+                  );
+                }
 
                 _currentVariant ??= product.variants.firstWhere(
                   (v) => v.isDefault,
@@ -243,10 +247,11 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                       (BuildContext context, bool innerBoxIsScrolled) {
                     return [
                       AppBarWidget(
-                        showTitle: _showTitle,
+                        showTitle: innerBoxIsScrolled,
                         initialData: widget.initialData,
                         loadedProduct: product,
                         selectedVariant: activeVariant,
+                        onBack: _closePage,
                       )
                     ];
                   },
@@ -291,7 +296,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                     ],
                                   ),
 
-                                  if (_currentVariant!.stock <= int.parse(SettingsData.instance.system!.lowStockLimit))...[
+                                  if (_currentVariant!.stock <= _lowStockLimit())...[
                                     Align(
                                       alignment: AlignmentGeometry.topLeft,
                                       child: Padding(

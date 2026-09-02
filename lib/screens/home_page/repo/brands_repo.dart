@@ -9,9 +9,9 @@ class BrandsRepository {
       {required String categorySlug,
       }) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
       String apiUrl = '';
 
       if(categorySlug.isNotEmpty){
@@ -34,9 +34,9 @@ class BrandsRepository {
         required List<int>? brandIds
       }) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       final queryParams = <String, dynamic>{
         'scope_category_slug': categorySlug.toString(),

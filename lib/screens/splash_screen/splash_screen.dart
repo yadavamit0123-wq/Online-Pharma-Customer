@@ -250,7 +250,7 @@ class _SplashScreenState extends State<SplashScreen> {
           return;
         }
         if (state is SettingsLoaded) {
-          if(SettingsData.instance.system!.webMaintenanceMode) {
+          if (SettingsData.instance.system?.webMaintenanceMode == true) {
             GoRouter.of(context).go(AppRoutes.maintenancePage,);
             return;
           }

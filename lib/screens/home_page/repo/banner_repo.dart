@@ -8,9 +8,9 @@ class BannerRepository {
   Future<Map<String, dynamic>> fetchBanners(
       {required String categorySlug}) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
       String apiUrl = '';
       if(categorySlug.isNotEmpty){
         apiUrl = '${ApiRoutes.bannerApi}?scope_category_slug=$categorySlug&latitude=$latitude&longitude=$longitude';

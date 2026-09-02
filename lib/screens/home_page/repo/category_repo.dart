@@ -7,14 +7,24 @@ class CategoryRepository {
   Future<Map<String, dynamic>> fetchCategory({
     required int perPage,
     required int currentPage,
-}) async {
+    bool homeOnly = true,
+    bool includeNoProduct = false,
+  }) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final query = StringBuffer(
+        '${ApiRoutes.categoryApi}?per_page=$perPage&page=$currentPage'
+        '&latitude=${coords.latitude}&longitude=${coords.longitude}',
+      );
+      if (homeOnly) {
+        query.write('&home=true');
+      }
+      if (includeNoProduct) {
+        query.write('&include_no_product=true');
+      }
       final response = await AppHelpers.apiBaseHelper.getAPICall(
-        '${ApiRoutes.categoryApi}?per_page=$perPage&page=$currentPage&latitude=$latitude&longitude=$longitude&home=true',
-        {}
+        query.toString(),
+        {},
       );
       return response.data;
     }catch(e){
@@ -28,17 +38,13 @@ class CategoryRepository {
     List<int>? categoryIds,
   }) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
-
+      final coords = LocationService.getApiCoordinates();
       final queryParams = <String, dynamic>{
         'per_page': perPage.toString(),
         'page': currentPage.toString(),
-        'latitude': latitude.toString(),
-        'longitude': longitude.toString(),
+        'latitude': coords.latitude.toString(),
+        'longitude': coords.longitude.toString(),
         'home': 'true',
-
       };
 
       if (categoryIds != null && categoryIds.isNotEmpty) {

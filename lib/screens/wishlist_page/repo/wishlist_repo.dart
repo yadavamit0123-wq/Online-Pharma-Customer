@@ -143,9 +143,9 @@ class UserWishlistRepository {
     required int perPage,
   }) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       final response = await AppHelpers.apiBaseHelper.getAPICall(
         '${ApiRoutes.wishlistProductApi}$wishlistId?page=$currentPage&per_page=$perPage&latitude=$latitude&longitude=$longitude',

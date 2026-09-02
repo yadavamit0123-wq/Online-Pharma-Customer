@@ -4,7 +4,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'user_location_hive.dart';
+import '../../config/settings_data_instance.dart';
 import '../../model/user_location/user_location_model.dart';
+
+class ApiCoordinates {
+  final double latitude;
+  final double longitude;
+
+  const ApiCoordinates({
+    required this.latitude,
+    required this.longitude,
+  });
+}
 
 class LocationService {
   
@@ -142,6 +153,28 @@ class LocationService {
       log("Error storing location from coordinates: $e");
       return null;
     }
+  }
+
+  /// Safe coordinates for API calls when stored location is missing.
+  static ApiCoordinates getApiCoordinates() {
+    final stored = getStoredLocation();
+    if (stored != null) {
+      return ApiCoordinates(
+        latitude: stored.latitude,
+        longitude: stored.longitude,
+      );
+    }
+
+    final latitude = double.tryParse(
+          SettingsData.instance.web?.defaultLatitude ?? '',
+        ) ??
+        23.2420;
+    final longitude = double.tryParse(
+          SettingsData.instance.web?.defaultLongitude ?? '',
+        ) ??
+        69.6669;
+
+    return ApiCoordinates(latitude: latitude, longitude: longitude);
   }
 
   /// Get stored location from Hive

@@ -7,11 +7,9 @@ class ProductDetailRepository {
 
   Future<Map<String, dynamic>> fetchProductDetail({required String productSlug}) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
       final response = await apiBaseHelper.getAPICall(
-        '${ApiRoutes.productDetailApi}$productSlug?latitude=$latitude&longitude=$longitude', {}
+        '${ApiRoutes.productDetailApi}$productSlug?latitude=${coords.latitude}&longitude=${coords.longitude}', {}
       );
       return response.data;
     }catch(e){
@@ -21,9 +19,9 @@ class ProductDetailRepository {
 
   Future<Map<String, dynamic>> fetchSimilarProduct({required List<String> excludeProductSlug}) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       String apiUrl = '';
       if(excludeProductSlug.isNotEmpty){

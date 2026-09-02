@@ -21,8 +21,9 @@ class CategoryProductRepository {
     List<int>? attributeIds,
   }) async {
     try {
-      final latitude = LocationService.getStoredLocation()!.latitude;
-      final longitude = LocationService.getStoredLocation()!.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       String buildListParam(String key, List<dynamic> values) {
         if (values.isEmpty) return '';
@@ -94,10 +95,9 @@ class CategoryProductRepository {
 
   }) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
 
       // Build query parameters
       final queryParams = <String, dynamic>{

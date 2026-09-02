@@ -35,10 +35,11 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
   }
 
   void _openFilterSheet() {
+    final system = SettingsData.instance.system;
     OrderFilterSheet.show(
       context: context,
-      dateOptions: SettingsData.instance.system!.dataFilterEnum,
-      sortOptions: SettingsData.instance.system!.orderStatusEnum,
+      dateOptions: system?.dataFilterEnum ?? const [],
+      sortOptions: system?.orderStatusEnum ?? const [],
       currentFilter: _filter,
       onApply: (newFilter) {
         setState(() => _filter = newFilter);

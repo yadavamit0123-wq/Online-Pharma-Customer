@@ -13,9 +13,9 @@ class SubCategoryRepository {
       bool? isFiltered = false
   }) async {
     try{
-      final locationService = LocationService.getStoredLocation();
-      final latitude = locationService!.latitude;
-      final longitude = locationService.longitude;
+      final coords = LocationService.getApiCoordinates();
+      final latitude = coords.latitude;
+      final longitude = coords.longitude;
       String apiUrl = '';
       final perPageParam = perPage;
       final pageParam = page != null ? '&page=$page' : '';

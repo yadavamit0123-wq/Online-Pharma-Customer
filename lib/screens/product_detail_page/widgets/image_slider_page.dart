@@ -61,6 +61,35 @@ class _ImageSliderPageState extends State<ImageSliderPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.images.isEmpty && !hasVideo) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            const Center(
+              child: Icon(Icons.image_not_supported_outlined,
+                  size: 72, color: Colors.grey),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              right: 16,
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black54,
+                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 28),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
