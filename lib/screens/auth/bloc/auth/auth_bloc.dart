@@ -377,7 +377,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required bool isLogin,
     int? resendToken,
   }) async {
-    final fullNumber = countryCode + phoneNumber;
+    // Firebase requires E.164: +[countryCode][number] (e.g. +918318769934)
+    final dialCode =
+        countryCode.startsWith('+') ? countryCode : '+$countryCode';
+    final fullNumber = '$dialCode$phoneNumber';
     log('Verifying phone: $fullNumber | ISO: $isoCode');
     if (AppHelpers.smsGatewayIsFirebase) {
       await FirebaseAuth.instance.verifyPhoneNumber(
@@ -412,14 +415,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               break;
 
             case 'operation-not-allowed':
-              errorMessage = 'Phone authentication is not enabled for this project.';
+              errorMessage = e.message?.contains('region') == true
+                  ? e.message
+                  : 'Phone authentication is not enabled for this project. '
+                      'Also check Firebase → Authentication → Settings → SMS region policy → Allow → India.';
               break;
 
-            /*default:
-              errorMessage = 'Failed to send OTP. Please check the phone number and try again.';*/
+            default:
+              errorMessage = e.message;
           }
 
-          add(AuthFailureEvent(error: errorMessage ?? e.message ?? 'Something went wrong'));
+          add(AuthFailureEvent(error: errorMessage ?? 'Failed to send OTP. Please try again.'));
         },
         codeSent: (String verificationId, int? newResendToken) {
           log('✅ OTP Code Sent! VerificationId: $verificationId');
